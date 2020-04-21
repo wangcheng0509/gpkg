@@ -1,4 +1,4 @@
-module gpkg
+module github.com/wangcheng0509/gpkg
 
 go 1.13
 
