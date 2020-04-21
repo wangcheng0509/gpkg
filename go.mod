@@ -1,4 +1,4 @@
-module go-pkg
+module gpkg
 
 go 1.13
 
