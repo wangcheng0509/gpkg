@@ -12,6 +12,7 @@ type Kong struct {
 	UpStreamName    string
 	TargetPath      string
 	TargetPort      string
+	TargetWeight    int
 	ServiceName     string
 	ServiceProtocol string
 	ServicePort     int
@@ -41,7 +42,7 @@ func InitKong(kongSetting Kong) {
 	// Target
 	targetRequest := &gokong.TargetRequest{
 		Target: kongSetting.TargetPath + ":" + kongSetting.TargetPort,
-		Weight: 100,
+		Weight: kongSetting.TargetWeight,
 	}
 	createdTarget, _ := client.Targets().CreateFromUpstreamId(updatedUpstream.Id, targetRequest)
 	fmt.Printf("Target: %+v", createdTarget)
