@@ -1,7 +1,8 @@
-package example
+package main
 
 import (
 	"encoding/base64"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"net/http"
@@ -22,6 +23,7 @@ import (
 	"github.com/wangcheng0509/gpkg/aes"
 	"github.com/wangcheng0509/gpkg/apollo"
 	"github.com/wangcheng0509/gpkg/app"
+	"github.com/wangcheng0509/gpkg/jwt"
 )
 
 func AesTest() {
@@ -128,4 +130,33 @@ func TryTest() error {
 	}).Finally(func() {})
 
 	return err.(error)
+}
+
+func JwtTest() {
+	type UserInfo struct {
+		UserName string
+		Pwd      string
+		NickName string
+	}
+	userinfo := UserInfo{
+		UserName: "username",
+		Pwd:      "123456",
+		NickName: "nickname",
+	}
+	jsonbyte, _ := json.Marshal(userinfo)
+
+	token, _ := jwt.GenerateToken(string(jsonbyte))
+	fmt.Println(token)
+	parseToken, _ := jwt.ParseToken(token)
+	fmt.Println(parseToken.InfoJson)
+	fmt.Println(parseToken.StandardClaims)
+
+	b := []byte(parseToken.InfoJson)
+	userinfo2 := UserInfo{}
+	json.Unmarshal(b, &userinfo2)
+	fmt.Println(userinfo2)
+}
+
+func main() {
+	JwtTest()
 }

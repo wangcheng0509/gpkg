@@ -51,7 +51,7 @@ func sendEmail(c *gin.Context, err interface{}, reqJson []byte) {
 			ClassName:   c.Request.RequestURI,
 			Message:     fmt.Sprintf("%s", err),
 			StackTrace:  DebugStack,
-			Level:       log.Level_Err,
+			Level:       int(log.LogERROR),
 			CreatedDate: time.Now(),
 		})
 	}

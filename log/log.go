@@ -23,10 +23,20 @@ func (LogModel) TableName() string {
 	return "Applicationlog"
 }
 
+type Loglevel int
+
 var (
 	db      *gorm.DB
 	logtype int
 	_dblog  = 1
+)
+
+const (
+	LogDEBUG Loglevel = iota
+	LogINFO
+	LogERROR
+	LogWARN
+	LogFATAL
 )
 
 func InitDBLog(databaseSetting mysqlconn.Database) {
