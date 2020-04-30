@@ -22,7 +22,7 @@ func saveDBLog(log LogModel) error {
 		err = errors.New(e.Msg)
 	}).Finally(func() {})
 
-	return nil
+	return err.(error)
 }
 
 func CloseDB() {
