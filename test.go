@@ -24,6 +24,11 @@ import (
 	"github.com/wangcheng0509/gpkg/apollo"
 	"github.com/wangcheng0509/gpkg/app"
 	"github.com/wangcheng0509/gpkg/jwt"
+
+	"github.com/chenjiandongx/ginprom"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
+	ginSwagger "github.com/swaggo/gin-swagger"
+	"github.com/swaggo/gin-swagger/swaggerFiles"
 )
 
 func AesTest() {
@@ -155,6 +160,18 @@ func JwtTest() {
 	userinfo2 := UserInfo{}
 	json.Unmarshal(b, &userinfo2)
 	fmt.Println(userinfo2)
+}
+
+func PromethesTest() {
+	r := gin.New()
+	r.Use(ginprom.PromMiddleware(nil))
+	r.GET("/metrics", ginprom.PromHandler(promhttp.Handler()))
+}
+
+func SwaggerTest() {
+	r := gin.New()
+	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+	// swagger文档更新命令：swag init
 }
 
 func main() {
