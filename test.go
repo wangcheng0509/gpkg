@@ -138,6 +138,7 @@ func TryTest() error {
 }
 
 func JwtTest() {
+	jwt.Setup("123456789", "test")
 	type UserInfo struct {
 		UserName string
 		Pwd      string

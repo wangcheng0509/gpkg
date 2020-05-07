@@ -7,10 +7,16 @@ import (
 )
 
 var jwtSecret []byte
+var issuer string
 
 type Claims struct {
 	InfoJson string
 	jwt.StandardClaims
+}
+
+func Setup(_jwtSecret, _issuer string) {
+	jwtSecret = []byte(_jwtSecret)
+	issuer = _issuer
 }
 
 // GenerateToken generate tokens used for auth
@@ -22,7 +28,7 @@ func GenerateToken(infoJson string) (string, error) {
 		infoJson,
 		jwt.StandardClaims{
 			ExpiresAt: expireTime.Unix(),
-			Issuer:    "gin-blog",
+			Issuer:    issuer,
 		},
 	}
 
