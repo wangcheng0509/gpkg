@@ -1,49 +1,52 @@
 package jwt
 
 import (
-	"time"
+	"encoding/json"
+	"errors"
+	"fmt"
 
 	"github.com/dgrijalva/jwt-go"
 )
 
 var jwtSecret []byte
-var issuer string
 
 type Claims struct {
-	InfoJson string
+	Unique_name  string
+	Guid         string
+	Avatar       string
+	DisplayName  string
+	LoginName    string
+	EmailAddress string
+	UserType     string
+	Time         string
 	jwt.StandardClaims
 }
 
-func Setup(_jwtSecret, _issuer string) {
+func Setup(_jwtSecret string) {
 	jwtSecret = []byte(_jwtSecret)
-	issuer = _issuer
 }
 
-// GenerateToken generate tokens used for auth
-func GenerateToken(infoJson string) (string, error) {
-	nowTime := time.Now()
-	expireTime := nowTime.Add(3 * time.Hour)
+// 以内置对象生成token
+func GenerateTokenByBuiltin(claims Claims) (string, error) {
+	return GenerateToken(claims)
+}
 
-	claims := Claims{
-		infoJson,
-		jwt.StandardClaims{
-			ExpiresAt: expireTime.Unix(),
-			Issuer:    issuer,
-		},
+// 自定义对象生成token
+func GenerateToken(claims interface{}) (string, error) {
+	if tmp, ok := claims.(jwt.Claims); ok {
+		tokenClaims := jwt.NewWithClaims(jwt.SigningMethodHS256, tmp)
+		token, err := tokenClaims.SignedString(jwtSecret)
+		return token, err
 	}
-
-	tokenClaims := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	token, err := tokenClaims.SignedString(jwtSecret)
-
-	return token, err
+	return "", errors.New("claims is not jwt.Claims")
 }
 
-// ParseToken parsing token
+// 解析成内置对象
 func ParseToken(token string) (*Claims, error) {
 	tokenClaims, err := jwt.ParseWithClaims(token, &Claims{}, func(token *jwt.Token) (interface{}, error) {
 		return jwtSecret, nil
 	})
-
+	fmt.Println(tokenClaims)
 	if tokenClaims != nil {
 		if claims, ok := tokenClaims.Claims.(*Claims); ok && tokenClaims.Valid {
 			return claims, nil
@@ -51,4 +54,18 @@ func ParseToken(token string) (*Claims, error) {
 	}
 
 	return nil, err
+}
+
+// 解析成json字符串
+func Parse(token string) (string, error) {
+	tokenRst, err := jwt.Parse(token, func(token *jwt.Token) (interface{}, error) {
+		return jwtSecret, nil
+	})
+	if tokenRst != nil {
+		if tokenRst.Valid {
+			claimsJson, _ := json.Marshal(tokenRst.Claims)
+			return string(claimsJson), nil
+		}
+	}
+	return "", err
 }

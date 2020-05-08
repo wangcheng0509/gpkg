@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"net/http"
 	"strings"
+	"time"
 
 	"github.com/wangcheng0509/gpkg/kong"
 	"github.com/wangcheng0509/gpkg/log"
@@ -20,10 +21,11 @@ import (
 	"github.com/wangcheng0509/gpkg/e"
 	"github.com/wangcheng0509/gpkg/exception"
 
+	"github.com/dgrijalva/jwt-go"
 	"github.com/wangcheng0509/gpkg/aes"
 	"github.com/wangcheng0509/gpkg/apollo"
 	"github.com/wangcheng0509/gpkg/app"
-	"github.com/wangcheng0509/gpkg/jwt"
+	jwttool "github.com/wangcheng0509/gpkg/jwt"
 
 	"github.com/chenjiandongx/ginprom"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
@@ -138,27 +140,45 @@ func TryTest() error {
 }
 
 func JwtTest() {
-	jwt.Setup("123456789", "test")
-	type UserInfo struct {
-		UserName string
-		Pwd      string
-		NickName string
+	// 初始化jwt参数
+	jwttool.Setup("inspiry888888888")
+	// 定义model
+	type Claims struct {
+		Unique_name  string
+		Guid         string
+		Avatar       string
+		DisplayName  string
+		LoginName    string
+		EmailAddress string
+		UserType     string
+		Time         string
+		jwt.StandardClaims
 	}
-	userinfo := UserInfo{
-		UserName: "username",
-		Pwd:      "123456",
-		NickName: "nickname",
+	// 生成jwt Token
+	nowTime := time.Now()
+	userinfo := Claims{
+		"username",
+		"123456",
+		"Avatar",
+		"王成",
+		"wangcheng",
+		"wangcheng@inspiry.cn",
+		"0",
+		"20200507152313",
+		jwt.StandardClaims{
+			ExpiresAt: (nowTime.Add(365 * time.Hour)).Unix(),
+			Issuer:    "inspiry",
+			Audience:  "inspiry",
+		},
 	}
-	jsonbyte, _ := json.Marshal(userinfo)
-
-	token, _ := jwt.GenerateToken(string(jsonbyte))
+	token, _ := jwttool.GenerateToken(userinfo)
 	fmt.Println(token)
-	parseToken, _ := jwt.ParseToken(token)
-	fmt.Println(parseToken.InfoJson)
-	fmt.Println(parseToken.StandardClaims)
-
-	b := []byte(parseToken.InfoJson)
-	userinfo2 := UserInfo{}
+	// 解析token
+	claimsJson, _ := jwttool.Parse("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVbmlxdWVfbmFtZSI6InVzZXJuYW1lIiwiR3VpZCI6IjEyMzQ1NiIsIkF2YXRhciI6IkF2YXRhciIsIkRpc3BsYXlOYW1lIjoi546L5oiQIiwiTG9naW5OYW1lIjoid2FuZ2NoZW5nIiwiRW1haWxBZGRyZXNzIjoid2FuZ2NoZW5nQGluc3BpcnkuY24iLCJVc2VyVHlwZSI6IjAiLCJUaW1lIjoiMjAyMDA1MDcxNTIzMTMiLCJhdWQiOiJpbnNwaXJ5IiwiZXhwIjoxNTkwMjIzNDE0LCJpc3MiOiJpbnNwaXJ5In0.hKKpBYmJextMGSPipXO_L5B3S9oRim_cw3EIryTdOZE")
+	fmt.Println(claimsJson)
+	// json转化
+	b := []byte(claimsJson)
+	userinfo2 := Claims{}
 	json.Unmarshal(b, &userinfo2)
 	fmt.Println(userinfo2)
 }
