@@ -1,6 +1,8 @@
 package app
 
 import (
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 
 	"github.com/wangcheng0509/gpkg/e"
@@ -21,6 +23,15 @@ func (g *Gin) Response(httpCode, errCode int, data interface{}) {
 	g.C.JSON(httpCode, Response{
 		Code: errCode,
 		Msg:  e.GetMsg(errCode),
+		Data: data,
+	})
+	return
+}
+
+func (g *Gin) Ok(data interface{}) {
+	g.C.JSON(http.StatusOK, Response{
+		Code: e.SUCCESS,
+		Msg:  e.GetMsg(e.SUCCESS),
 		Data: data,
 	})
 	return
