@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/wangcheng0509/gpkg/utils"
 	"encoding/base64"
 	"encoding/json"
 	"errors"
@@ -174,7 +175,7 @@ func JwtTest() {
 	token, _ := jwttool.GenerateToken(userinfo)
 	fmt.Println(token)
 	// 解析token
-	claimsJson, _ := jwttool.Parse("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVbmlxdWVfbmFtZSI6InVzZXJuYW1lIiwiR3VpZCI6IjEyMzQ1NiIsIkF2YXRhciI6IkF2YXRhciIsIkRpc3BsYXlOYW1lIjoi546L5oiQIiwiTG9naW5OYW1lIjoid2FuZ2NoZW5nIiwiRW1haWxBZGRyZXNzIjoid2FuZ2NoZW5nQGluc3BpcnkuY24iLCJVc2VyVHlwZSI6IjAiLCJUaW1lIjoiMjAyMDA1MDcxNTIzMTMiLCJhdWQiOiJpbnNwaXJ5IiwiZXhwIjoxNTkwMjIzNDE0LCJpc3MiOiJpbnNwaXJ5In0.hKKpBYmJextMGSPipXO_L5B3S9oRim_cw3EIryTdOZE")
+	claimsJson, _ := jwttool.Parse("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IndhbmdjaGVuZyIsImd1aWQiOiJjMTc2ZmUzOC1jYWQ5LTQ1NDAtODJhZC0yYzg4NWQ2YjNhYzMiLCJhdmF0YXIiOiIiLCJkaXNwbGF5TmFtZSI6IueOi-aIkCIsImxvZ2luTmFtZSI6IndhbmdjaGVuZyIsImVtYWlsQWRkcmVzcyI6IiIsInVzZXJUeXBlIjoiMCIsIlRpbWUiOiIyMDIwMDUwOTExMzczMSIsIm5iZiI6MTU4ODk5NTQ1MSwiZXhwIjoxNjIwNTMxNDUxLCJpYXQiOjE1ODg5OTU0NTEsImlzcyI6Imluc3BpcnkiLCJhdWQiOiJpbnNwaXJ5In0.xsxkBsVHrIr5uIg2NMZu2vsTHjZ-4fwAB3YXFdURbC0")
 	fmt.Println(claimsJson)
 	// json转化
 	b := []byte(claimsJson)
@@ -195,6 +196,12 @@ func SwaggerTest() {
 	// swagger文档更新命令：swag init
 }
 
+func DistinctTest(){
+	var strarr = []string{"1","1","2","3","2","3"}
+	strarr = utils.DistinctElement(strarr)
+	fmt.Println(strarr)
+}
+
 func main() {
-	JwtTest()
+	DistinctTest()
 }
