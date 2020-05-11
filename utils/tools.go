@@ -53,16 +53,30 @@ func EncodeMD5(value string) string {
 func DistinctElement(arr []string) (newArr []string) {
 	newArr = make([]string, 0)
 	for i := 0; i < len(arr); i++ {
-			repeat := false
-			for j := i + 1; j < len(arr); j++ {
-					if arr[i] == arr[j] {
-							repeat = true
-							break
-					}
+		repeat := false
+		for j := i + 1; j < len(arr); j++ {
+			if arr[i] == arr[j] {
+				repeat = true
+				break
 			}
-			if !repeat {
-					newArr = append(newArr, arr[i])
-			}
+		}
+		if !repeat {
+			newArr = append(newArr, arr[i])
+		}
 	}
 	return
+}
+
+// 判断切片中是否包含某一元素
+func IsExistItem(val interface{}, arr interface{}) bool {
+	switch reflect.TypeOf(arr).Kind() {
+	case reflect.Slice:
+		s := reflect.ValueOf(arr)
+		for i := 0; i < s.Len(); i++ {
+			if reflect.DeepEqual(val, s.Index(i).Interface()) {
+				return true
+			}
+		}
+	}
+	return false
 }
