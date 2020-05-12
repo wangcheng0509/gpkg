@@ -4,10 +4,10 @@ import "github.com/wangcheng0509/gpkg/e"
 
 type ResponseResultModel struct {
 	Response
-	TotalCount int64
+	TotalCount int
 }
 
-func (r ResponseResultModel) SetData(data interface{}, totalCount int64) {
+func (r ResponseResultModel) SetData(data interface{}, totalCount int) {
 	r.Message = e.GetMsg(e.SUCCESS)
 	r.Code = e.SUCCESS
 	r.Data = data
