@@ -7,7 +7,7 @@ type ResponseResultModel struct {
 	TotalCount int
 }
 
-func (r ResponseResultModel) SetData(data interface{}, totalCount int) {
+func (r *ResponseResultModel) SetData(data interface{}, totalCount int) {
 	r.Message = e.GetMsg(e.SUCCESS)
 	r.Code = e.SUCCESS
 	r.Data = data

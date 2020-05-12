@@ -10,22 +10,22 @@ type Response struct {
 	Data    interface{} `json:"data"`
 }
 
-func (r Response) SetSuccess(message string) {
+func (r *Response) SetSuccess(message string) {
 	r.Message = message
 	r.Code = e.SUCCESS
 }
 
-func (r Response) SetFailed(message string) {
+func (r *Response) SetFailed(message string) {
 	r.Message = message
 	r.Code = e.FAILED
 }
 
-func (r Response) SetError(message string) {
+func (r *Response) SetError(message string) {
 	r.Message = message
 	r.Code = e.ERROR
 }
 
-func (r Response) SetData(data interface{}) {
+func (r *Response) SetData(data interface{}) {
 	r.Message = e.GetMsg(e.SUCCESS)
 	r.Code = e.SUCCESS
 	r.Data = data
