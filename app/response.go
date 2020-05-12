@@ -22,7 +22,7 @@ func (g *Gin) Response(httpCode, errCode int, data interface{}) {
 	return
 }
 
-func (g *Gin) Ok(rsp Response) {
+func (g *Gin) Ok(rsp interface{}) {
 	g.C.JSON(http.StatusOK, rsp)
 	return
 }
