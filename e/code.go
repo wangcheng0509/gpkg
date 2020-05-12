@@ -4,6 +4,7 @@ const (
 	SUCCESS        = 200
 	ERROR          = 500
 	INVALID_PARAMS = 400
+	FAILED         = 999
 
 	ERROR_EXIST_TAG       = 10001
 	ERROR_EXIST_TAG_FAIL  = 10002

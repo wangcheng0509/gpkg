@@ -46,9 +46,9 @@ func ExceptionHandle() gin.HandlerFunc {
 				if errSlice := strings.Split(err.(string), "||"); len(errSlice) > 2 {
 					if errSlice[0] == customFlag {
 						c.JSON(http.StatusUnauthorized, gin.H{
-							"code": errSlice[1],
-							"msg":  errSlice[2],
-							"data": nil,
+							"code":    errSlice[1],
+							"message": errSlice[2],
+							"data":    nil,
 						})
 
 						c.Abort()
@@ -58,9 +58,9 @@ func ExceptionHandle() gin.HandlerFunc {
 
 				sendEmail(c, err, reqJson)
 				c.JSON(http.StatusUnauthorized, gin.H{
-					"code": e.ERROR,
-					"msg":  e.GetMsg(e.ERROR),
-					"data": nil,
+					"code":    e.ERROR,
+					"message": e.GetMsg(e.ERROR),
+					"data":    nil,
 				})
 				c.Abort()
 				return

@@ -12,27 +12,17 @@ type Gin struct {
 	C *gin.Context
 }
 
-type Response struct {
-	Code int         `json:"code"`
-	Msg  string      `json:"message"`
-	Data interface{} `json:"data"`
-}
-
 // Response setting gin.JSON
 func (g *Gin) Response(httpCode, errCode int, data interface{}) {
 	g.C.JSON(httpCode, Response{
-		Code: errCode,
-		Msg:  e.GetMsg(errCode),
-		Data: data,
+		Code:    errCode,
+		Message: e.GetMsg(errCode),
+		Data:    data,
 	})
 	return
 }
 
-func (g *Gin) Ok(data interface{}) {
-	g.C.JSON(http.StatusOK, Response{
-		Code: e.SUCCESS,
-		Msg:  e.GetMsg(e.SUCCESS),
-		Data: data,
-	})
+func (g *Gin) Ok(rsp Response) {
+	g.C.JSON(http.StatusOK, rsp)
 	return
 }

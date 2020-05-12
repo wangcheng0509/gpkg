@@ -1,14 +1,14 @@
 package main
 
 import (
-	"github.com/wangcheng0509/gpkg/utils"
 	"encoding/base64"
 	"encoding/json"
 	"errors"
 	"fmt"
-	"net/http"
 	"strings"
 	"time"
+
+	"github.com/wangcheng0509/gpkg/utils"
 
 	"github.com/wangcheng0509/gpkg/kong"
 	"github.com/wangcheng0509/gpkg/log"
@@ -19,7 +19,6 @@ import (
 	"github.com/wangcheng0509/gpkg/gredis"
 
 	"github.com/gin-gonic/gin"
-	"github.com/wangcheng0509/gpkg/e"
 	"github.com/wangcheng0509/gpkg/exception"
 
 	"github.com/dgrijalva/jwt-go"
@@ -55,7 +54,9 @@ func ApolloTest() {
 
 func AppRspTest(c *gin.Context) {
 	appG := app.Gin{C: c}
-	appG.Response(http.StatusOK, e.SUCCESS, "success")
+	rsp := app.Response{}
+	rsp.SetData(nil)
+	appG.Ok(rsp)
 }
 
 func ExceptionMiddlewareTest() {
@@ -196,12 +197,34 @@ func SwaggerTest() {
 	// swagger文档更新命令：swag init
 }
 
-func DistinctTest(){
-	var strarr = []string{"1","1","2","3","2","3"}
+func DistinctTest() {
+	var strarr = []string{"1", "1", "2", "3", "2", "3"}
 	strarr = utils.DistinctElement(strarr)
 	fmt.Println(strarr)
 }
 
+func IsExistItemTest() {
+	type Stu struct {
+		Name string
+		Age  int
+	}
+	stus := []Stu{
+		Stu{
+			Name: "tome",
+			Age:  10,
+		},
+		Stu{
+			Name: "jarry",
+			Age:  10,
+		},
+	}
+	stu := Stu{
+		Name: "jarry",
+		Age:  10,
+	}
+	fmt.Println(utils.IsExistItem(stu, stus))
+}
+
 func main() {
-	DistinctTest()
+	IsExistItemTest()
 }
