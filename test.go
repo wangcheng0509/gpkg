@@ -225,6 +225,16 @@ func IsExistItemTest() {
 	fmt.Println(utils.IsExistItem(stu, stus))
 }
 
+func CombinSqlTest() {
+	sql := "select * from test $WHERE"
+	var where []string
+	where = append(where, "a=1")
+	where = append(where, "b=1")
+	where = append(where, "c=1")
+	sql = utils.CombinSql(sql, where)
+	fmt.Println(sql)
+}
+
 func main() {
-	IsExistItemTest()
+	CombinSqlTest()
 }
