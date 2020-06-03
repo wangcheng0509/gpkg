@@ -43,16 +43,18 @@ func ExceptionHandle() gin.HandlerFunc {
 
 		defer func() {
 			if err := recover(); err != nil {
-				if errSlice := strings.Split(err.(string), "||"); len(errSlice) > 2 {
-					if errSlice[0] == customFlag {
-						c.JSON(http.StatusUnauthorized, gin.H{
-							"code":    errSlice[1],
-							"message": errSlice[2],
-							"data":    nil,
-						})
+				if errInfo, ok := err.(string); ok {
+					if errSlice := strings.Split(errInfo, "||"); len(errSlice) > 2 {
+						if errSlice[0] == customFlag {
+							c.JSON(http.StatusUnauthorized, gin.H{
+								"code":    errSlice[1],
+								"message": errSlice[2],
+								"data":    nil,
+							})
 
-						c.Abort()
-						return
+							c.Abort()
+							return
+						}
 					}
 				}
 
