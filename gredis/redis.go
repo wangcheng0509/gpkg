@@ -1,6 +1,7 @@
 package gredis
 
 import (
+	"encoding/json"
 	"fmt"
 	"strings"
 	"time"
@@ -24,4 +25,9 @@ func Setup(redisConn string) {
 	fmt.Println("******************************************************************************")
 	fmt.Println("********************************redis启动成功**********************************")
 	fmt.Println("******************************************************************************")
+}
+
+func Get(key string, v interface{}) {
+	jsonStr, _ := RedisConn.Get(key).Result()
+	json.Unmarshal([]byte(jsonStr), v)
 }

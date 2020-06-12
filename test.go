@@ -74,12 +74,33 @@ func ExceptionMiddlewareTest() {
 }
 
 func RedisTest() {
-	redisConn := "127.0.0.1:6379|127.0.0.2:6379"
+	redisConn := "192.168.20.96:6379|192.168.20.46:6379|192.168.20.69:6379|192.168.20.96:6389|192.168.20.46:6389|192.168.20.69:6389"
 	gredis.Setup(redisConn)
-	gredis.RedisConn.Set("key", "value", 60*1000)
-	cache, _ := gredis.RedisConn.Get("key").Result()
+	test := RedisTestStruct{
+		Name:  "aaa",
+		Value: "1111",
+	}
+
+	if err := gredis.RedisConn.Set("sssskey", &test, 60*time.Minute).Err(); err != nil {
+		fmt.Println(err)
+	}
+	cache := RedisTestStruct{}
+	gredis.Get("sssskey", &cache)
 	fmt.Println(cache)
 }
+
+type RedisTestStruct struct {
+	Name  string `json:"name"`
+	Value string `json:"value"`
+}
+
+// func (s *RedisTestStruct) MarshalBinary() ([]byte, error) {
+// 	return json.Marshal(s)
+// }
+
+// func (s *RedisTestStruct) UnmarshalBinary(data []byte) error {
+// 	return json.Unmarshal(data, s)
+// }
 
 func KongTest() {
 	routeprotocol := strings.Split("http,https", ",")
@@ -236,5 +257,5 @@ func CombinSqlTest() {
 }
 
 func main() {
-	CombinSqlTest()
+	RedisTest()
 }
