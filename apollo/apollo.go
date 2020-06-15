@@ -9,8 +9,9 @@ import (
 var ApolloConfig agollo.Agollo
 
 type Apollo struct {
-	Path  string
-	AppId string
+	AppName string
+	Path    string
+	AppId   string
 }
 
 // apollo初始化
@@ -19,8 +20,8 @@ type Apollo struct {
 func InitAgollo(apollo Apollo) {
 	ApolloConfig, _ = agollo.New(apollo.Path, apollo.AppId, agollo.AutoFetchOnCacheMiss())
 	fmt.Println("**************************************************************")
-	fmt.Println("****************Apollo启动成功*********************************")
-	fmt.Println("****************" + ApolloConfig.Get("AppName", agollo.WithNamespace("Uei")) + "*******************************")
+	fmt.Println("****************Apollo启动成功********************************")
+	fmt.Println("****************" + apollo.AppName + "*******************************")
 	fmt.Println("**************************************************************")
 }
 
