@@ -167,14 +167,14 @@ func JwtTest() {
 	jwttool.Setup("inspiry888888888")
 	// 定义model
 	type Claims struct {
-		Unique_name  string
-		Guid         string
-		Avatar       string
-		DisplayName  string
-		LoginName    string
-		EmailAddress string
-		UserType     string
-		Time         string
+		Unique_name  string `json:"unique_name"`
+		Guid         string `json:"guid"`
+		Avatar       string `json:"avatar"`
+		DisplayName  string `json:"displayName"`
+		LoginName    string `json:"loginName"`
+		EmailAddress string `json:"emailAddress"`
+		UserType     string `json:"userType"`
+		Time         string `json:"time"`
 		jwt.StandardClaims
 	}
 	// 生成jwt Token
@@ -226,8 +226,8 @@ func DistinctTest() {
 
 func IsExistItemTest() {
 	type Stu struct {
-		Name string
-		Age  int
+		Name string `json:"name"`
+		Age  int    `json:"age"`
 	}
 	stus := []Stu{
 		Stu{

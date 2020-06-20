@@ -4,7 +4,7 @@ import "github.com/wangcheng0509/gpkg/e"
 
 type ResponseResultModel struct {
 	Response
-	TotalCount int
+	TotalCount int `json:"totalCount"`
 }
 
 func (r *ResponseResultModel) SetData(data interface{}, totalCount int) {
