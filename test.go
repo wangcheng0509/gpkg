@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"net/http"
 	"strings"
 	"time"
 
@@ -22,10 +23,12 @@ import (
 	"github.com/wangcheng0509/gpkg/exception"
 
 	"github.com/dgrijalva/jwt-go"
+	"github.com/gorilla/websocket"
 	"github.com/wangcheng0509/gpkg/aes"
 	"github.com/wangcheng0509/gpkg/apollo"
 	"github.com/wangcheng0509/gpkg/app"
 	jwttool "github.com/wangcheng0509/gpkg/jwt"
+	"github.com/wangcheng0509/gpkg/ws"
 
 	"github.com/chenjiandongx/ginprom"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
@@ -71,6 +74,26 @@ func ExceptionMiddlewareTest() {
 	exception.Init(&exceptionSetting)
 	r := gin.New()
 	r.Use(exception.ExceptionHandle())
+}
+
+func WebSocketTest() {
+	// 启动服务之前异步开启websocket
+	// go ws.Manager.Start()
+	var c *gin.Context
+	conn, error := (&websocket.Upgrader{CheckOrigin: func(r *http.Request) bool { return true }}).Upgrade(c.Writer, c.Request, nil)
+	if error != nil {
+		http.NotFound(c.Writer, c.Request)
+		return
+	}
+	client := &ws.Client{ID: "ClientId", Socket: conn, Send: make(chan []byte)}
+	ws.Manager.Register <- client
+
+	go client.Read()
+	go client.Write()
+
+	// 可以异步根据ClientId下发消息
+	// client := &ws.Client{ID: "ClientId", Socket: ws.Manager.ClientConns["ClientId"].Socket, Send: make(chan []byte)}
+	// ws.Manager.Send([]byte("test"), client)
 }
 
 func RedisTest() {
