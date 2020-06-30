@@ -279,6 +279,25 @@ func CombinSqlTest() {
 	fmt.Println(sql)
 }
 
+func JsonUnmarshalTest() {
+	type Stu struct {
+		A string
+		B string
+	}
+	jsonStr := "{\"a\":\"123\",\"b\":\"456\"}"
+	var stu string
+	utils.JsonUnmarshal(jsonStr, &stu)
+	fmt.Println(stu)
+}
+
+func HttpTest() {
+	var rsp string
+	if err := utils.HttpPost(&rsp, "https://www.inspiry.cn/", nil, ""); err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println(rsp)
+}
+
 func main() {
-	RedisTest()
+	HttpTest()
 }

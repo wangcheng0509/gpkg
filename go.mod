@@ -8,6 +8,7 @@ require (
 	github.com/gin-gonic/gin v1.6.2
 	github.com/go-redis/redis v6.15.7+incompatible
 	github.com/google/go-querystring v1.0.0 // indirect
+	github.com/gorilla/websocket v1.4.0
 	github.com/jinzhu/gorm v1.9.12
 	github.com/kevholditch/gokong v6.0.0+incompatible
 	github.com/parnurzeal/gorequest v0.2.16 // indirect

@@ -3,6 +3,7 @@ package utils
 import (
 	"crypto/md5"
 	"encoding/hex"
+	"encoding/json"
 	"reflect"
 )
 
@@ -79,4 +80,17 @@ func IsExistItem(val interface{}, arr interface{}) bool {
 		}
 	}
 	return false
+}
+
+func JsonUnmarshal(jsonStr string, out interface{}) error {
+	switch t := out.(type) {
+	case *string:
+		*t = jsonStr
+		return nil
+	default:
+		if err := json.Unmarshal([]byte(jsonStr), out); err != nil {
+			return err
+		}
+	}
+	return nil
 }
