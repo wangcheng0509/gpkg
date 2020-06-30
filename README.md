@@ -10,5 +10,6 @@ Kong网关自动注册
 Log处理  
 MYSQL链接创建  
 Rabbitmq发送  
+WebSocket通信封装
 Try  
 一些常用方法（持续更新）  
