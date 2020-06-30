@@ -9,11 +9,10 @@ import (
 
 // ClientManager is a websocket manager
 type ClientManager struct {
-	ClientConns map[string]*Client
-	Clients     map[*Client]bool
-	Broadcast   chan []byte
-	Register    chan *Client
-	Unregister  chan *Client
+	Clients    map[string]*Client
+	Broadcast  chan []byte
+	Register   chan *Client
+	Unregister chan *Client
 }
 
 // Client is a websocket client
@@ -32,11 +31,10 @@ type Message struct {
 
 // Manager define a ws server manager
 var Manager = ClientManager{
-	Broadcast:   make(chan []byte),
-	Register:    make(chan *Client),
-	Unregister:  make(chan *Client),
-	Clients:     make(map[*Client]bool),
-	ClientConns: make(map[string]*Client),
+	Broadcast:  make(chan []byte),
+	Register:   make(chan *Client),
+	Unregister: make(chan *Client),
+	Clients:    make(map[string]*Client),
 }
 
 // Start is to start a ws server
@@ -44,28 +42,12 @@ func (manager *ClientManager) Start() {
 	for {
 		select {
 		case conn := <-manager.Register:
-			manager.Clients[conn] = true
 			deviceNo := conn.ID
-			manager.ClientConns[deviceNo] = conn
-			jsonMessage, _ := json.Marshal(&Message{Content: deviceNo + " has connected."})
-			fmt.Println(deviceNo + " has connected.")
-			manager.Send(jsonMessage, conn)
+			manager.Clients[deviceNo] = conn
 		case conn := <-manager.Unregister:
-			if _, ok := manager.Clients[conn]; ok {
+			if _, ok := manager.Clients[conn.ID]; ok {
 				close(conn.Send)
-				delete(manager.Clients, conn)
-				delete(manager.ClientConns, conn.ID)
-				jsonMessage, _ := json.Marshal(&Message{Content: "/A socket has disconnected."})
-				manager.Send(jsonMessage, conn)
-			}
-		case message := <-manager.Broadcast:
-			for conn := range manager.Clients {
-				select {
-				case conn.Send <- message:
-				default:
-					close(conn.Send)
-					delete(manager.Clients, conn)
-				}
+				delete(manager.Clients, conn.ID)
 			}
 		}
 	}
@@ -73,11 +55,7 @@ func (manager *ClientManager) Start() {
 
 // Send is to send ws message to ws client
 func (manager *ClientManager) Send(message []byte, ignore *Client) {
-	for conn := range manager.Clients {
-		if conn != ignore {
-			conn.Send <- message
-		}
-	}
+	ignore.Send <- message
 }
 
 func (c *Client) Read() {
