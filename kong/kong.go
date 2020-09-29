@@ -18,6 +18,7 @@ type Kong struct {
 	ServicePort     int
 	RouteProtocol   []string
 	RouteHost       []string
+	RoutePath       string
 }
 
 func InitKong(kongSetting Kong) {
@@ -34,8 +35,14 @@ func InitKong(kongSetting Kong) {
 	updateUpstreamRequest := &gokong.UpstreamRequest{}
 	json.Unmarshal(upstreamJson, updateUpstreamRequest)
 	updateUpstreamRequest.Name = kongSetting.UpStreamName
-	updatedUpstream, _ := client.Upstreams().UpdateByName(kongSetting.UpStreamName, updateUpstreamRequest)
-	fmt.Printf("Upstream: %+v", updatedUpstream)
+	updateUpstreamRequest.HealthChecks.Active.HttpPath = fmt.Sprintf("/%s/kong/healthchecks", kongSetting.RoutePath)
+	var updatedUpstream *gokong.Upstream
+	if upstream, _ := client.Upstreams().GetByName(kongSetting.UpStreamName); upstream != nil {
+		updatedUpstream, _ = client.Upstreams().UpdateByName(kongSetting.UpStreamName, updateUpstreamRequest)
+	} else {
+		updatedUpstream, _ = client.Upstreams().Create(updateUpstreamRequest)
+	}
+	fmt.Printf("Upstream: %s，%+v", updatedUpstream.Id, updatedUpstream)
 	fmt.Println("")
 	fmt.Println("-----------------------------------------------------")
 
@@ -44,8 +51,11 @@ func InitKong(kongSetting Kong) {
 		Target: kongSetting.TargetPath + ":" + kongSetting.TargetPort,
 		Weight: kongSetting.TargetWeight,
 	}
-	createdTarget, _ := client.Targets().CreateFromUpstreamId(updatedUpstream.Id, targetRequest)
-	fmt.Printf("Target: %+v", createdTarget)
+	createdTarget, err := client.Targets().CreateFromUpstreamId(updatedUpstream.Id, targetRequest)
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Printf("Target: %s，%+v", *createdTarget.Id, createdTarget)
 	fmt.Println("")
 	fmt.Println("-----------------------------------------------------")
 
@@ -56,8 +66,15 @@ func InitKong(kongSetting Kong) {
 		Host:     &kongSetting.UpStreamName,
 		Port:     &kongSetting.ServicePort,
 	}
-	updatedService, _ := client.Services().UpdateServiceByName(*serviceRequest.Name, serviceRequest)
-	fmt.Printf("Service: %+v", updatedService)
+
+	var updatedService *gokong.Service
+	if service, _ := client.Services().GetServiceByName(kongSetting.ServiceName); service != nil {
+		updatedService, _ = client.Services().UpdateServiceByName(kongSetting.ServiceName, serviceRequest)
+	} else {
+		updatedService, _ = client.Services().Create(serviceRequest)
+	}
+
+	fmt.Printf("Service: %s，%+v", *updatedService.Id, updatedService)
 	fmt.Println("")
 	fmt.Println("-----------------------------------------------------")
 
@@ -67,13 +84,20 @@ func InitKong(kongSetting Kong) {
 		Protocols:    gokong.StringSlice(kongSetting.RouteProtocol),
 		Methods:      gokong.StringSlice([]string{"POST", "GET", "PUT", "DELETE", "OPTIONS", "HEAD", "TRACE", "CONNECT"}),
 		Hosts:        gokong.StringSlice(kongSetting.RouteHost),
-		Paths:        gokong.StringSlice([]string{"/(?i)"}),
+		Paths:        gokong.StringSlice([]string{fmt.Sprintf("/%s/(?i)", kongSetting.RoutePath)}),
 		StripPath:    gokong.Bool(false),
 		PreserveHost: gokong.Bool(false),
 		Service:      gokong.ToId(*updatedService.Id),
 	}
-	updatedRoute, _ := client.Routes().UpdateByName(*routeRequest.Name, routeRequest)
-	fmt.Printf("Route: %+v", updatedRoute)
+
+	var updatedRoute *gokong.Route
+	if route, _ := client.Routes().GetByName(*routeRequest.Name); route != nil {
+		updatedRoute, _ = client.Routes().UpdateByName(*routeRequest.Name, routeRequest)
+	} else {
+		updatedRoute, _ = client.Routes().Create(routeRequest)
+	}
+
+	fmt.Printf("Route: %s，%+v", *updatedRoute.Id, updatedRoute)
 	fmt.Println("")
 	fmt.Println("-----------------------------------------------------")
 	fmt.Println("------------------Kong注册成功------------------------")
