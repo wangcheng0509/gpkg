@@ -161,10 +161,9 @@ func RabbitTest() {
 		Username: "username",
 		Pwd:      "pwd",
 		Vh:       "Virtual Hosts",
-		Queue:    "Queue",
 	}
 	rabbitmq.Init(mqSetting)
-	rabbitmq.SendMsg([]byte("msg"))
+	rabbitmq.SendMsg("", []byte("msg"))
 }
 
 func TryTest() error {
@@ -253,11 +252,11 @@ func IsExistItemTest() {
 		Age  int    `json:"age"`
 	}
 	stus := []Stu{
-		Stu{
+		{
 			Name: "tome",
 			Age:  10,
 		},
-		Stu{
+		{
 			Name: "jarry",
 			Age:  10,
 		},

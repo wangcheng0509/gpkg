@@ -12,13 +12,14 @@ type Mq struct {
 	Username string
 	Pwd      string
 	Vh       string
-	Queue    string
+	// Queue    string
 }
 
 var mqSetting Mq
 var ch *amqp.Channel
 var conn *amqp.Connection
-var q amqp.Queue
+
+// var q amqp.Queue
 
 func Init(_mqSetting Mq) {
 	mqSetting = _mqSetting
@@ -34,26 +35,26 @@ func openConn() {
 	ch, err = conn.Channel()
 	failOnError(err, "Failed to open a channel")
 	// defer ch.Close()
-	q, err = ch.QueueDeclare(
-		mqSetting.Queue, //Queue name
-		true,            //durable
-		false,
-		false,
-		false,
-		nil,
-	)
-	failOnError(err, "Failed to declare a queue")
-	fmt.Println(q.Name)
+	// q, err = ch.QueueDeclare(
+	// 	mqSetting.Queue, //Queue name
+	// 	true,            //durable
+	// 	false,
+	// 	false,
+	// 	false,
+	// 	nil,
+	// )
+	// failOnError(err, "Failed to declare a queue")
+	// fmt.Println(q.Name)
 }
 
-func SendMsg(msg []byte) {
+func SendMsg(queue string, msg []byte) {
 	if conn == nil || conn.IsClosed() || ch == nil {
 		openConn()
 	}
 
 	err := ch.Publish(
-		"",     //exchange
-		q.Name, //routing key
+		"",    //exchange
+		queue, //routing key
 		false,
 		false,
 		amqp.Publishing{
