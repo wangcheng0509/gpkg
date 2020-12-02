@@ -5,7 +5,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"github.com/wangcheng0509/gpkg/e"
+	"gpkg/e"
 )
 
 type Gin struct {
