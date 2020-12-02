@@ -5,7 +5,7 @@ import (
 	"errors"
 	"fmt"
 
-	"gpkg/utils"
+	"github.com/wangcheng0509/gpkg/utils"
 )
 
 type ExSetting struct {

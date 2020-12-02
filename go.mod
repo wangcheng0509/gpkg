@@ -1,4 +1,4 @@
-module gpkg
+module github.com/wangcheng0509/gpkg
 
 go 1.14
 
@@ -8,17 +8,15 @@ require (
 	github.com/gin-gonic/gin v1.6.3
 	github.com/go-redis/redis v6.15.9+incompatible
 	github.com/google/go-querystring v1.0.0 // indirect
-	github.com/gorilla/websocket v1.4.0
-	github.com/jinzhu/gorm v1.9.12
+	github.com/gorilla/websocket v1.4.2
+	github.com/jinzhu/gorm v1.9.16
 	github.com/kevholditch/gokong v6.0.0+incompatible
 	github.com/parnurzeal/gorequest v0.2.16 // indirect
-	github.com/pkg/errors v0.9.1 // indirect
-	github.com/prometheus/client_golang v0.9.3
+	github.com/prometheus/client_golang v1.8.0
 	github.com/shima-park/agollo v1.2.7
-	github.com/streadway/amqp v0.0.0-20200108173154-1c71cc93ed71
-	github.com/swaggo/gin-swagger v1.2.0
+	github.com/streadway/amqp v0.0.0-20190827072141-edfb9018d271
+	github.com/swaggo/gin-swagger v1.3.0
 	github.com/xinliangnote/go-util v0.0.0-20200323134426-527984dc34bf
-	golang.org/x/net v0.0.0-20201201195509-5d6afe98e0b7 // indirect
 	gopkg.in/gomail.v2 v2.0.0-20160411212932-81ebce5c23df // indirect
 	moul.io/http2curl v1.0.0 // indirect
 )

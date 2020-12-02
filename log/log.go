@@ -3,7 +3,7 @@ package log
 import (
 	"time"
 
-	"gpkg/mysqlconn"
+	"github.com/wangcheng0509/gpkg/mysqlconn"
 
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"

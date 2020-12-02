@@ -1,7 +1,7 @@
 package app
 
 import (
-	"gpkg/e"
+	"github.com/wangcheng0509/gpkg/e"
 )
 
 type Response struct {

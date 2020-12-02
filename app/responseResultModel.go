@@ -1,6 +1,6 @@
 package app
 
-import "gpkg/e"
+import "github.com/wangcheng0509/gpkg/e"
 
 type ResponseResultModel struct {
 	Response

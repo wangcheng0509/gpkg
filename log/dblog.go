@@ -3,8 +3,8 @@ package log
 import (
 	"errors"
 
-	"gpkg/mysqlconn"
-	"gpkg/try"
+	"github.com/wangcheng0509/gpkg/mysqlconn"
+	"github.com/wangcheng0509/gpkg/try"
 )
 
 var databaseSetting = &mysqlconn.Database{}

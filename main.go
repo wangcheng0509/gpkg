@@ -9,27 +9,27 @@ import (
 	"strings"
 	"time"
 
-	"gpkg/exceptionless"
+	"github.com/wangcheng0509/gpkg/exceptionless"
 
-	"gpkg/utils"
+	"github.com/wangcheng0509/gpkg/utils"
 
-	"gpkg/kong"
-	"gpkg/log"
-	"gpkg/mysqlconn"
-	"gpkg/rabbitmq"
-	"gpkg/try"
+	"github.com/wangcheng0509/gpkg/kong"
+	"github.com/wangcheng0509/gpkg/log"
+	"github.com/wangcheng0509/gpkg/mysqlconn"
+	"github.com/wangcheng0509/gpkg/rabbitmq"
+	"github.com/wangcheng0509/gpkg/try"
 
-	"gpkg/gredis"
+	"github.com/wangcheng0509/gpkg/gredis"
 
-	"gpkg/exception"
+	"github.com/wangcheng0509/gpkg/exception"
 
 	"github.com/gin-gonic/gin"
 
-	"gpkg/aes"
-	"gpkg/apollo"
-	"gpkg/app"
-	jwttool "gpkg/jwt"
-	"gpkg/ws"
+	"github.com/wangcheng0509/gpkg/aes"
+	"github.com/wangcheng0509/gpkg/apollo"
+	"github.com/wangcheng0509/gpkg/app"
+	jwttool "github.com/wangcheng0509/gpkg/jwt"
+	"github.com/wangcheng0509/gpkg/ws"
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gorilla/websocket"
@@ -102,7 +102,7 @@ func WebSocketTest() {
 
 func RedisTest() {
 	redisConn := "192.168.20.96:6379|192.168.20.46:6379|192.168.20.69:6379|192.168.20.96:6389|192.168.20.46:6389|192.168.20.69:6389"
-	gredis.Setup(redisConn)
+	gredis.Setup(redisConn, "")
 	test := RedisTestStruct{
 		Name:  "aaa",
 		Value: "1111",

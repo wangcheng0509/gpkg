@@ -9,8 +9,8 @@ import (
 	"strings"
 	"time"
 
-	"gpkg/e"
-	logHelp "gpkg/exceptionless"
+	"github.com/wangcheng0509/gpkg/e"
+	logHelp "github.com/wangcheng0509/gpkg/exceptionless"
 
 	"github.com/gin-gonic/gin"
 	timeF "github.com/xinliangnote/go-util/time"
