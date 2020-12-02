@@ -10,7 +10,7 @@ import (
 	"time"
 
 	"gpkg/e"
-	"gpkg/log"
+	logHelp "gpkg/exceptionless"
 
 	"github.com/gin-gonic/gin"
 	timeF "github.com/xinliangnote/go-util/time"
@@ -100,13 +100,11 @@ func sendEmail(c *gin.Context, err interface{}, reqJson []byte) {
 	SendEmailNotice(subject, body)
 
 	if errSetting.IsLog {
-		log.Info(log.LogModel{
-			Application: errSetting.AppName,
-			ClassName:   c.Request.RequestURI,
-			Message:     fmt.Sprintf("%s", err),
-			StackTrace:  DebugStack,
-			Level:       int(log.LogERROR),
-			CreatedDate: time.Now(),
-		})
+		msg := fmt.Sprintf(`Application:%s,
+		ClassName:%s,
+		Message:%s,
+		StackTrace:%s,
+		CreatedDate:%s`, errSetting.AppName, c.Request.RequestURI, fmt.Sprintf("%s", err), DebugStack, time.Now().Format("2006-01-02 15:04:05"))
+		logHelp.Error(msg, true)
 	}
 }
