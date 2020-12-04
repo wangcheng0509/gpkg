@@ -102,20 +102,20 @@ func WebSocketTest() {
 
 func RedisTest() {
 	redisConn := "192.168.20.96:6379|192.168.20.46:6379|192.168.20.69:6379|192.168.20.96:6389|192.168.20.46:6389|192.168.20.69:6389"
-	gredis.Setup(redisConn, "")
+	gredis.SetupCluster(redisConn, "")
 	test := RedisTestStruct{
 		Name:  "aaa",
 		Value: "1111",
 	}
 
-	if err := gredis.RedisConn.Set("sssskey", &test, 60*time.Minute).Err(); err != nil {
+	if err := gredis.Cluster.Set("sssskey", &test, 60*time.Minute).Err(); err != nil {
 		fmt.Println(err)
 	}
 	cache := RedisTestStruct{}
-	gredis.Get("sssskey", &cache)
+	gredis.Cluster.Get("sssskey")
 	fmt.Println(cache)
 
-	gredis.RedisConn.Publish("channel-data_sync_aiot_device_attribute", test)
+	gredis.Client.Publish("channel-data_sync_aiot_device_attribute", test)
 }
 
 type RedisTestStruct struct {
