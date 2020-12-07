@@ -41,10 +41,14 @@ func Log(msg string, isEmail bool) error {
 	var rspStr string
 	reqByte, _ := json.Marshal(&req)
 	if err := utils.HttpPost(&rspStr, exSetting.Url+"/Log", nil, string(reqByte)); err != nil {
+		fmt.Println("请求写入日志错误：")
+		fmt.Println(err)
 		return err
 	}
 	var rsp exLessRsp
 	if err := json.Unmarshal([]byte(rspStr), &rsp); err != nil {
+		fmt.Println("解析写入日志返回错误：")
+		fmt.Println(err)
 		fmt.Println(exSetting.Url + "/Log")
 		fmt.Println(string(reqByte))
 		return err
@@ -68,13 +72,23 @@ func Error(msg string, isEmail bool) error {
 	var rspStr string
 	reqByte, _ := json.Marshal(&req)
 	if err := utils.HttpPost(&rspStr, exSetting.Url+"/Log", nil, string(reqByte)); err != nil {
+		fmt.Println("请求写入日志错误：")
+		fmt.Println(err)
 		return err
 	}
 	var rsp exLessRsp
 	if err := json.Unmarshal([]byte(rspStr), &rsp); err != nil {
+		fmt.Println("解析写入日志返回错误：")
+		fmt.Println(err)
+		fmt.Println(exSetting.Url + "/Log")
+		fmt.Println(string(reqByte))
 		return err
 	}
 	if rsp.Code != 200 {
+		fmt.Println("日志返回错误：")
+		fmt.Println(exSetting.Url + "/Log")
+		fmt.Println(string(reqByte))
+		fmt.Println(rsp.Message)
 		return errors.New(rsp.Message)
 	}
 	if isEmail {
