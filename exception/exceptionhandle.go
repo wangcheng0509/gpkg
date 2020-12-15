@@ -16,6 +16,7 @@ import (
 	timeF "github.com/xinliangnote/go-util/time"
 )
 
+// ErrOption 配置
 type ErrOption struct {
 	AppName         string
 	SystemEmailHost string
@@ -24,10 +25,17 @@ type ErrOption struct {
 	SystemEmailPass string
 	ErrorNotifyUser string
 	IsLog           bool
+	// URL 消息中心地址
+	URL string
+	// Webhook 钉钉Webhook
+	Webhook string `json:"webhook"`
+	// Secret 钉钉密钥
+	Secret string `json:"secret"`
 }
 
 var errSetting = &ErrOption{}
 
+// Init 初始化
 func Init(_errSetting *ErrOption) {
 	errSetting = _errSetting
 }
@@ -35,16 +43,16 @@ func Init(_errSetting *ErrOption) {
 // 自定义异常标志
 var customFlag = "custom err"
 
-// 抛出自定义错误
+// ThrowCustomErr 抛出自定义错误
 func ThrowCustomErr(code int, msg string) {
 	panic(fmt.Sprintf("%s||%d||%s", customFlag, code, msg))
 }
 
-// 异常处理
+// ExceptionHandle 异常处理
 func ExceptionHandle() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		reqJson, _ := c.GetRawData()
-		c.Request.Body = ioutil.NopCloser(bytes.NewBuffer(reqJson))
+		reqJSON, _ := c.GetRawData()
+		c.Request.Body = ioutil.NopCloser(bytes.NewBuffer(reqJSON))
 
 		defer func() {
 			if err := recover(); err != nil {
@@ -63,7 +71,7 @@ func ExceptionHandle() gin.HandlerFunc {
 					}
 				}
 
-				sendEmail(c, err, reqJson)
+				sendEmail(c, err, reqJSON)
 				c.JSON(http.StatusUnauthorized, gin.H{
 					"code":    e.ERROR,
 					"message": e.GetMsg(e.ERROR),
@@ -77,7 +85,7 @@ func ExceptionHandle() gin.HandlerFunc {
 	}
 }
 
-func sendEmail(c *gin.Context, err interface{}, reqJson []byte) {
+func sendEmail(c *gin.Context, err interface{}, reqJSON []byte) {
 	defer func() {
 		if err := recover(); err != nil {
 			fmt.Println(err)
@@ -93,11 +101,12 @@ func sendEmail(c *gin.Context, err interface{}, reqJson []byte) {
 	body = strings.ReplaceAll(body, "{RequestTime}", timeF.GetCurrentDate())
 	body = strings.ReplaceAll(body, "{RequestURL}", c.Request.Method+"  "+c.Request.Host+c.Request.RequestURI)
 	body = strings.ReplaceAll(body, "{RequestUA}", c.Request.UserAgent())
-	body = strings.ReplaceAll(body, "{RequestBody}", string(reqJson))
+	body = strings.ReplaceAll(body, "{RequestBody}", string(reqJSON))
 	body = strings.ReplaceAll(body, "{RequestIP}", c.ClientIP())
 	body = strings.ReplaceAll(body, "{DebugStack}", DebugStack)
 
 	SendEmailNotice(subject, body)
+	SendDingdingNotice(subject, body)
 
 	if errSetting.IsLog {
 		msg := fmt.Sprintf(`Application:%s,

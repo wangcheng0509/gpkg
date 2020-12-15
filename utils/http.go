@@ -6,8 +6,8 @@ import (
 	"strings"
 )
 
-// HttpGet
-func HttpGet(out interface{}, url string, header map[string]string) error {
+// HTTPGet Get请求
+func HTTPGet(out interface{}, url string, header map[string]string) error {
 	client := &http.Client{}
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
@@ -24,14 +24,14 @@ func HttpGet(out interface{}, url string, header map[string]string) error {
 	if err != nil {
 		return err
 	}
-	if err := JsonUnmarshal(string(body), out); err != nil {
+	if err := JSONUnmarshal(string(body), out); err != nil {
 		return err
 	}
 	return nil
 }
 
-// HttpPost
-func HttpPost(out interface{}, url string, header map[string]string, param string) error {
+// HTTPPost POST请求
+func HTTPPost(out interface{}, url string, header map[string]string, param string) error {
 	client := &http.Client{}
 	req, err := http.NewRequest("POST", url, strings.NewReader(param))
 	if err != nil {
@@ -49,7 +49,7 @@ func HttpPost(out interface{}, url string, header map[string]string, param strin
 	if err != nil {
 		return err
 	}
-	if err := JsonUnmarshal(string(body), out); err != nil {
+	if err := JSONUnmarshal(string(body), out); err != nil {
 		return err
 	}
 	return nil

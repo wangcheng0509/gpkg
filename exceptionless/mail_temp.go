@@ -1,5 +1,6 @@
 package exceptionless
 
+// MailTemplate 邮件模板
 var MailTemplate = `<html>
  <head>
   <meta charset="utf-8" />

@@ -2,12 +2,13 @@ package utils
 
 import (
 	"crypto/md5"
+	"encoding/base64"
 	"encoding/hex"
 	"encoding/json"
 	"reflect"
 )
 
-// 判断空值
+// IsBlank 判断空值
 func IsBlank(value reflect.Value) bool {
 	switch value.Kind() {
 	case reflect.String, reflect.Array:
@@ -28,7 +29,7 @@ func IsBlank(value reflect.Value) bool {
 	return reflect.DeepEqual(value.Interface(), reflect.Zero(value.Type()).Interface())
 }
 
-// 对象转 interface切片
+// ToInterfaceArr 对象转 interface切片
 func ToInterfaceArr(arr interface{}) []interface{} {
 	if reflect.TypeOf(arr).Kind() != reflect.Slice {
 		return nil
@@ -50,7 +51,7 @@ func EncodeMD5(value string) string {
 	return hex.EncodeToString(m.Sum(nil))
 }
 
-// 字符串数组去重
+// DistinctElement 字符串数组去重
 func DistinctElement(arr []string) (newArr []string) {
 	newArr = make([]string, 0)
 	for i := 0; i < len(arr); i++ {
@@ -68,7 +69,7 @@ func DistinctElement(arr []string) (newArr []string) {
 	return
 }
 
-// 判断切片中是否包含某一元素
+// IsExistItem 判断切片中是否包含某一元素
 func IsExistItem(val interface{}, arr interface{}) bool {
 	switch reflect.TypeOf(arr).Kind() {
 	case reflect.Slice:
@@ -82,7 +83,8 @@ func IsExistItem(val interface{}, arr interface{}) bool {
 	return false
 }
 
-func JsonUnmarshal(jsonStr string, out interface{}) error {
+// JSONUnmarshal json反解析
+func JSONUnmarshal(jsonStr string, out interface{}) error {
 	switch t := out.(type) {
 	case *string:
 		*t = jsonStr
@@ -93,4 +95,9 @@ func JsonUnmarshal(jsonStr string, out interface{}) error {
 		}
 	}
 	return nil
+}
+
+// BaseEncode base加密
+func BaseEncode(str string) string {
+	return base64.StdEncoding.EncodeToString([]byte(str))
 }

@@ -9,6 +9,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/wangcheng0509/gpkg/dingding"
 	"github.com/wangcheng0509/gpkg/exceptionless"
 
 	"github.com/wangcheng0509/gpkg/utils"
@@ -31,7 +32,7 @@ import (
 	jwttool "github.com/wangcheng0509/gpkg/jwt"
 	"github.com/wangcheng0509/gpkg/ws"
 
-	"github.com/dgrijalva/jwt-go"
+	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/gorilla/websocket"
 
 	"github.com/chenjiandongx/ginprom"
@@ -286,7 +287,7 @@ func CombinSqlTest() {
 
 func HttpTest() {
 	var rsp string
-	if err := utils.HttpPost(&rsp, "https://www.inspiry.cn/", nil, ""); err != nil {
+	if err := utils.HTTPPost(&rsp, "https://www.inspiry.cn/", nil, ""); err != nil {
 		fmt.Println(err)
 	}
 	fmt.Println(rsp)
@@ -295,8 +296,8 @@ func HttpTest() {
 func Exceptionless() {
 	exSetting := exceptionless.ExSetting{
 		AppName:       "gpkg",
-		ApiKey:        "Jj82AlEi5GGlC8tCBdaheydP7kXBDRcJXK9YRX3V",
-		Url:           "http://api.t.dev.pay.fun/message",
+		APIKey:        "Jj82AlEi5GGlC8tCBdaheydP7kXBDRcJXK9YRX3V",
+		URL:           "http://api.t.dev.pay.fun/message",
 		ExceptionMail: "wangcheng@pay.media",
 	}
 	exceptionless.Init(exSetting)
@@ -304,6 +305,30 @@ func Exceptionless() {
 	exceptionless.Error("exceptionless test", true)
 }
 
+func DingdingMsgTest() {
+	webhook := "https://oapi.dingtalk.com/robot/send?access_token=e34ac31df5d217d872e265c836001bb50315239d608d6c0ac9444c8763b454f4"
+	secret := "SEC11c5f7696030690ce6183bd632fe498b19b70d8f2e970889c214d5159702a903"
+	templet := "# {AppName} 异常提醒  \n **{time}**  \n **{errMsg}**  \n {errInfo}"
+	dingTemple := templet
+	dingTemple = strings.ReplaceAll(dingTemple, "{AppName}", "aiot.mq")
+	dingTemple = strings.ReplaceAll(dingTemple, "{time}", time.Now().Format("2006-1-6 15:4:5"))
+	dingTemple = strings.ReplaceAll(dingTemple, "{errMsg}", "异常消息")
+	dingTemple = strings.ReplaceAll(dingTemple, "{errInfo}", "异常明细")
+	reqParam := dingding.DingReq{
+		Msgtype: "markdown",
+		Markdown: dingding.Markdown{
+			Title: "aiot.mq 异常提醒",
+			Text:  dingTemple,
+		},
+	}
+	req := dingding.SendDingdingReq{
+		Content: reqParam,
+		Webhook: webhook,
+		Secret:  secret,
+	}
+	dingding.SendDingdingMsg(req)
+}
+
 func main() {
-	Exceptionless()
+	DingdingMsgTest()
 }
