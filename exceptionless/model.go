@@ -13,7 +13,7 @@ type exLessRsp struct {
 
 // SendDingdingReq 发送钉钉请求参数
 type sendDingdingReq struct {
-	DingReq dingReq `json:"content"`
+	DingReq dingReq `json:"dingReq"`
 	Webhook string  `json:"webhook"`
 	Secret  string  `json:"secret"`
 }
