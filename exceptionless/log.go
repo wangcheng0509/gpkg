@@ -124,7 +124,7 @@ func sendDingdingNotice(subject, body string) error {
 	templet := "# {AppName} 异常提醒  \n **{time}**  \n **{errMsg}**  \n {errInfo}"
 	dingTemple := templet
 	dingTemple = strings.ReplaceAll(dingTemple, "{AppName}", subject)
-	dingTemple = strings.ReplaceAll(dingTemple, "{time}", time.Now().Format("2006-1-6 15:4:5"))
+	dingTemple = strings.ReplaceAll(dingTemple, "{time}", time.Now().Format("2006-1-2 15:4:5"))
 	dingTemple = strings.ReplaceAll(dingTemple, "{errMsg}", subject)
 	dingTemple = strings.ReplaceAll(dingTemple, "{errInfo}", body)
 	reqParam := sendDingdingReq{
