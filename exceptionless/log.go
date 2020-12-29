@@ -91,7 +91,11 @@ func Error(msg string, isEmail bool) error {
 	}
 	if isEmail {
 		sendEmailNotice(exSetting.AppName+" Error", msg)
-		sendDingdingNotice(exSetting.AppName+" Error", msg)
+		dingMsg := msg
+		if len(msg) > 199 {
+			dingMsg = string([]byte(msg)[:199])
+		}
+		sendDingdingNotice(exSetting.AppName+" Error", dingMsg)
 		fmt.Println("发送邮件成功")
 	}
 	return nil
@@ -144,5 +148,6 @@ func sendDingdingNotice(subject, body string) error {
 		fmt.Println("发送钉钉错误")
 		return err
 	}
+	fmt.Println(rspStr)
 	return nil
 }
