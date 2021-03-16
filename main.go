@@ -11,6 +11,7 @@ import (
 
 	"github.com/wangcheng0509/gpkg/dingding"
 	"github.com/wangcheng0509/gpkg/exceptionless"
+	"github.com/wangcheng0509/gpkg/loghelp"
 
 	"github.com/wangcheng0509/gpkg/utils"
 
@@ -329,6 +330,18 @@ func DingdingMsgTest() {
 	dingding.SendDingdingMsg(req)
 }
 
+func loghelpTest() {
+	loghelp.InitLog(loghelp.LogSetting{
+		Application: "gpk",
+		DingSetting: dingding.SendDingdingReq{
+			Webhook: "https://oapi.dingtalk.com/robot/send?access_token=708446152fb5472907b78b35c332fc7be9a437f45f65efb1240b2dfe0eea97f6",
+			Secret:  "SECb3e44230a7f63943c80091c0f67cc5bb386694db303808f34587b9fbb0893468",
+		},
+	})
+	loghelp.Log("logtest", "stacktrace", false)
+	loghelp.Error("logtest", "stacktrace", true)
+}
+
 func main() {
-	DingdingMsgTest()
+	loghelpTest()
 }
