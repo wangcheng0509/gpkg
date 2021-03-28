@@ -11,6 +11,7 @@ import (
 
 	"github.com/wangcheng0509/gpkg/e"
 	logHelp "github.com/wangcheng0509/gpkg/exceptionless"
+	"github.com/wangcheng0509/gpkg/loghelp"
 
 	"github.com/gin-gonic/gin"
 	timeF "github.com/xinliangnote/go-util/time"
@@ -88,7 +89,7 @@ func ExceptionHandle() gin.HandlerFunc {
 func sendEmail(c *gin.Context, err interface{}, reqJSON []byte) {
 	defer func() {
 		if err := recover(); err != nil {
-			fmt.Println(err)
+			loghelp.Error(errSetting.AppName, fmt.Sprintf("%s", err), true)
 		}
 	}()
 	DebugStack := ""

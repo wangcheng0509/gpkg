@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/kevholditch/gokong"
+	"github.com/wangcheng0509/gpkg/loghelp"
 )
 
 type Kong struct {
@@ -24,7 +25,6 @@ type Kong struct {
 func InitKong(kongSetting Kong) {
 	defer func() {
 		if err := recover(); err != nil {
-			fmt.Println(err)
 			panic(err)
 		}
 	}()
@@ -42,9 +42,8 @@ func InitKong(kongSetting Kong) {
 	} else {
 		updatedUpstream, _ = client.Upstreams().Create(updateUpstreamRequest)
 	}
-	fmt.Printf("Upstream: %s，%+v", updatedUpstream.Id, updatedUpstream)
-	fmt.Println("")
-	fmt.Println("-----------------------------------------------------")
+	updatedUpstreamStr, _ := json.Marshal(updatedUpstream)
+	loghelp.Log("kong.Upstream", string(updatedUpstreamStr), false)
 
 	// Target
 	targetRequest := &gokong.TargetRequest{
@@ -53,11 +52,10 @@ func InitKong(kongSetting Kong) {
 	}
 	createdTarget, err := client.Targets().CreateFromUpstreamId(updatedUpstream.Id, targetRequest)
 	if err != nil {
-		fmt.Println(err)
+		panic(err)
 	}
-	fmt.Printf("Target: %s，%+v", *createdTarget.Id, createdTarget)
-	fmt.Println("")
-	fmt.Println("-----------------------------------------------------")
+	createdTargetStr, _ := json.Marshal(createdTarget)
+	loghelp.Log("kong.Target", string(createdTargetStr), false)
 
 	// Service
 	serviceRequest := &gokong.ServiceRequest{
@@ -66,17 +64,14 @@ func InitKong(kongSetting Kong) {
 		Host:     &kongSetting.UpStreamName,
 		Port:     &kongSetting.ServicePort,
 	}
-
 	var updatedService *gokong.Service
 	if service, _ := client.Services().GetServiceByName(kongSetting.ServiceName); service != nil {
 		updatedService, _ = client.Services().UpdateServiceByName(kongSetting.ServiceName, serviceRequest)
 	} else {
 		updatedService, _ = client.Services().Create(serviceRequest)
 	}
-
-	fmt.Printf("Service: %s，%+v", *updatedService.Id, updatedService)
-	fmt.Println("")
-	fmt.Println("-----------------------------------------------------")
+	servicetStr, _ := json.Marshal(updatedService)
+	loghelp.Log("kong.service", string(servicetStr), false)
 
 	// Route
 	routeRequest := &gokong.RouteRequest{
@@ -96,10 +91,6 @@ func InitKong(kongSetting Kong) {
 	} else {
 		updatedRoute, _ = client.Routes().Create(routeRequest)
 	}
-
-	fmt.Printf("Route: %s，%+v", *updatedRoute.Id, updatedRoute)
-	fmt.Println("")
-	fmt.Println("-----------------------------------------------------")
-	fmt.Println("------------------Kong注册成功------------------------")
-	fmt.Println("-----------------------------------------------------")
+	routeStr, _ := json.Marshal(updatedRoute)
+	loghelp.Log("kong.route", string(routeStr), false)
 }

@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/shima-park/agollo"
+	"github.com/wangcheng0509/gpkg/loghelp"
 )
 
 var ApolloConfig agollo.Agollo
@@ -19,10 +20,7 @@ type Apollo struct {
 // appId: someApp
 func InitAgollo(apollo Apollo) {
 	ApolloConfig, _ = agollo.New(apollo.Path, apollo.AppId, agollo.AutoFetchOnCacheMiss())
-	fmt.Println("**************************************************************")
-	fmt.Println("****************Apollo启动成功********************************")
-	fmt.Println("****************" + apollo.AppName + "*******************************")
-	fmt.Println("**************************************************************")
+	loghelp.Log(fmt.Sprintf("%s Apollo启动成功", apollo.AppName), "", false)
 }
 
 func GetSetting(key, ns string) string {

@@ -3,9 +3,9 @@ package jwt
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 
 	jwt "github.com/dgrijalva/jwt-go"
+	"github.com/wangcheng0509/gpkg/loghelp"
 )
 
 var jwtSecret []byte
@@ -46,7 +46,8 @@ func ParseToken(token string) (*Claims, error) {
 	tokenClaims, err := jwt.ParseWithClaims(token, &Claims{}, func(token *jwt.Token) (interface{}, error) {
 		return jwtSecret, nil
 	})
-	fmt.Println(tokenClaims)
+	tokenClaimsStr, _ := json.Marshal(tokenClaims)
+	loghelp.Log("tokenClaims", string(tokenClaimsStr), false)
 	if tokenClaims != nil {
 		if claims, ok := tokenClaims.Claims.(*Claims); ok && tokenClaims.Valid {
 			return claims, nil

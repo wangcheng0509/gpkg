@@ -1,11 +1,11 @@
 package gredis
 
 import (
-	"fmt"
 	"strings"
 	"time"
 
 	"github.com/go-redis/redis"
+	"github.com/wangcheng0509/gpkg/loghelp"
 )
 
 var Cluster *redis.ClusterClient
@@ -23,9 +23,7 @@ func SetupCluster(redisConn, pwd string) {
 		WriteTimeout: 50 * time.Millisecond,
 	})
 	// RedisConn.Do("SET", "gredis-loading", "success")
-	fmt.Println("******************************************************************************")
-	fmt.Println("********************************redis启动成功**********************************")
-	fmt.Println("******************************************************************************")
+	loghelp.Log("redis Cluster启动成功", "", false)
 }
 
 // Setup Initialize the Redis instance
@@ -38,7 +36,5 @@ func SetupClient(redisConn, pwd string) {
 		WriteTimeout: 50 * time.Millisecond,
 	})
 	// RedisConn.Do("SET", "gredis-loading", "success")
-	fmt.Println("******************************************************************************")
-	fmt.Println("********************************redis启动成功**********************************")
-	fmt.Println("******************************************************************************")
+	loghelp.Log("redis Client启动成功", "", false)
 }

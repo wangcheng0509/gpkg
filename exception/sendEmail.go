@@ -6,6 +6,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/wangcheng0509/gpkg/loghelp"
 	"github.com/wangcheng0509/gpkg/utils"
 	"github.com/xinliangnote/go-util/mail"
 )
@@ -14,7 +15,7 @@ import (
 func SendEmailNotice(subject, body string) {
 	defer func() {
 		if err := recover(); err != nil {
-			fmt.Println(err)
+			loghelp.Error(subject+"发送邮件错误", fmt.Sprintf("%s", err), true)
 		}
 	}()
 
@@ -53,7 +54,7 @@ func SendDingdingNotice(subject, body string) error {
 	var rspStr string
 	reqByte, _ := json.Marshal(&reqParam)
 	if err := utils.HTTPPost(&rspStr, errSetting.URL+"/DingDing", nil, string(reqByte)); err != nil {
-		fmt.Println("发送钉钉错误")
+		loghelp.Error(subject+" 发送钉钉错误", fmt.Sprintf("%s", err), true)
 		return err
 	}
 	return nil
