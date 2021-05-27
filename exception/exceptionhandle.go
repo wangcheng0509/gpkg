@@ -107,7 +107,7 @@ func sendEmail(c *gin.Context, err interface{}, reqJSON []byte) {
 	body = strings.ReplaceAll(body, "{DebugStack}", DebugStack)
 
 	SendEmailNotice(subject, body)
-	SendDingdingNotice(subject, body)
+	SendDingdingNotice(errSetting.AppName, subject, body)
 
 	if errSetting.IsLog {
 		msg := fmt.Sprintf(`Application:%s,
