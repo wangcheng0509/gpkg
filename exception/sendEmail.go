@@ -1,13 +1,12 @@
 package exception
 
 import (
-	"encoding/json"
 	"fmt"
 	"strings"
 	"time"
 
+	"github.com/wangcheng0509/gpkg/dingding"
 	"github.com/wangcheng0509/gpkg/loghelp"
-	"github.com/wangcheng0509/gpkg/utils"
 	"github.com/xinliangnote/go-util/mail"
 )
 
@@ -40,10 +39,10 @@ func SendDingdingNotice(appName, subject, body string) error {
 	dingTemple = strings.ReplaceAll(dingTemple, "{time}", time.Now().Format("2006-1-6 15:4:5"))
 	dingTemple = strings.ReplaceAll(dingTemple, "{errMsg}", subject)
 	dingTemple = strings.ReplaceAll(dingTemple, "{errInfo}", body)
-	reqParam := sendDingdingReq{
-		DingReq: dingReq{
+	reqParam := dingding.SendDingdingReq{
+		Content: dingding.DingReq{
 			Msgtype: "markdown",
-			Markdown: markdown{
+			Markdown: dingding.Markdown{
 				Title: appName + " 异常提醒",
 				Text:  dingTemple,
 			},
@@ -51,9 +50,8 @@ func SendDingdingNotice(appName, subject, body string) error {
 		Webhook: errSetting.Webhook,
 		Secret:  errSetting.Secret,
 	}
-	var rspStr string
-	reqByte, _ := json.Marshal(&reqParam)
-	if err := utils.HTTPPost(&rspStr, errSetting.URL+"/DingDing", nil, string(reqByte)); err != nil {
+
+	if err := dingding.SendDingdingMsg(reqParam); err != nil {
 		loghelp.Error(appName+" 发送钉钉错误", fmt.Sprintf("%s", err), true)
 		return err
 	}
