@@ -34,14 +34,14 @@ func openConn() {
 	failOnError(err, "Failed to open a channel")
 }
 
-func SendMsg(queue string, msg []byte) {
+func SendMsg(exchange, queue string, msg []byte) {
 	if conn == nil || conn.IsClosed() || ch == nil {
 		openConn()
 	}
 
 	err := ch.Publish(
-		"",    //exchange
-		queue, //routing key
+		exchange, //exchange
+		queue,    //routing key
 		false,
 		false,
 		amqp.Publishing{
