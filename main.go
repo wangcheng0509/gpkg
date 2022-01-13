@@ -171,7 +171,7 @@ func RabbitTest() {
 		Vh:       "Virtual Hosts",
 	}
 	rabbitmq.Init(mqSetting)
-	rabbitmq.SendMsg("", []byte("msg"))
+	rabbitmq.SendMsg("", "", []byte("msg"))
 }
 
 func TryTest() error {

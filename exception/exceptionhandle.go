@@ -96,7 +96,7 @@ func sendEmail(c *gin.Context, err interface{}, reqJSON []byte) {
 	for _, v := range strings.Split(string(debug.Stack()), "\n") {
 		DebugStack += v + "<br>"
 	}
-	subject := fmt.Sprintf("【重要错误】%s 项目出错了！", errSetting.AppName)
+	subject := fmt.Sprintf("【重要错误】%s 项目出错了！", errSetting.AppName+";"+c.Request.Method+"  "+c.Request.Host+c.Request.RequestURI)
 
 	body := strings.ReplaceAll(MailTemplate, "{ErrorMsg}", fmt.Sprintf("%s", err))
 	body = strings.ReplaceAll(body, "{RequestTime}", timeF.GetCurrentDate())
