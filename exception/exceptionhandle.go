@@ -60,7 +60,7 @@ func ExceptionHandle() gin.HandlerFunc {
 				if errInfo, ok := err.(string); ok {
 					if errSlice := strings.Split(errInfo, "||"); len(errSlice) > 2 {
 						if errSlice[0] == customFlag {
-							c.JSON(http.StatusUnauthorized, gin.H{
+							c.JSON(http.StatusInternalServerError, gin.H{
 								"code":    errSlice[1],
 								"message": errSlice[2],
 								"data":    nil,
@@ -72,8 +72,8 @@ func ExceptionHandle() gin.HandlerFunc {
 					}
 				}
 
-				sendEmail(c, err, reqJSON)
-				c.JSON(http.StatusUnauthorized, gin.H{
+				sendNotice(c, err, reqJSON)
+				c.JSON(http.StatusInternalServerError, gin.H{
 					"code":    e.ERROR,
 					"message": e.GetMsg(e.ERROR),
 					"data":    nil,
@@ -86,7 +86,7 @@ func ExceptionHandle() gin.HandlerFunc {
 	}
 }
 
-func sendEmail(c *gin.Context, err interface{}, reqJSON []byte) {
+func sendNotice(c *gin.Context, err interface{}, reqJSON []byte) {
 	defer func() {
 		if err := recover(); err != nil {
 			loghelp.Error(errSetting.AppName, fmt.Sprintf("%s", err), true)
@@ -107,7 +107,7 @@ func sendEmail(c *gin.Context, err interface{}, reqJSON []byte) {
 	body = strings.ReplaceAll(body, "{DebugStack}", DebugStack)
 
 	SendEmailNotice(subject, body)
-	SendDingdingNotice(errSetting.AppName, subject, body)
+	SendDingdingNotice(errSetting.AppName, subject, fmt.Sprintf("%s", err))
 
 	if errSetting.IsLog {
 		msg := fmt.Sprintf(`Application:%s,
