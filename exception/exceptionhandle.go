@@ -20,18 +20,16 @@ import (
 // ErrOption 配置
 type ErrOption struct {
 	AppName         string
+	IsMail          bool
 	SystemEmailHost string
 	SystemEmailPort int
 	SystemEmailUser string
 	SystemEmailPass string
 	ErrorNotifyUser string
-	IsLog           bool
-	// URL 消息中心地址
-	URL string
-	// Webhook 钉钉Webhook
-	Webhook string `json:"webhook"`
-	// Secret 钉钉密钥
-	Secret string `json:"secret"`
+	IsDing          bool
+	Webhook         string `json:"webhook"` // Webhook 钉钉Webhook
+	Secret          string `json:"secret"`  // Secret 钉钉密钥
+	IsDbLog         bool
 }
 
 var errSetting = &ErrOption{}
@@ -105,11 +103,14 @@ func sendNotice(c *gin.Context, err interface{}, reqJSON []byte) {
 	body = strings.ReplaceAll(body, "{RequestBody}", string(reqJSON))
 	body = strings.ReplaceAll(body, "{RequestIP}", c.ClientIP())
 	body = strings.ReplaceAll(body, "{DebugStack}", DebugStack)
+	if errSetting.IsMail {
+		SendEmailNotice(subject, body)
+	}
+	if errSetting.IsDing {
+		SendDingdingNotice(errSetting.AppName, subject, fmt.Sprintf("%s", err))
+	}
 
-	SendEmailNotice(subject, body)
-	SendDingdingNotice(errSetting.AppName, subject, fmt.Sprintf("%s", err))
-
-	if errSetting.IsLog {
+	if errSetting.IsDbLog {
 		msg := fmt.Sprintf(`Application:%s,
 		ClassName:%s,
 		Message:%s,

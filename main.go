@@ -33,7 +33,7 @@ import (
 	jwttool "github.com/wangcheng0509/gpkg/jwt"
 	"github.com/wangcheng0509/gpkg/ws"
 
-	jwt "github.com/dgrijalva/jwt-go"
+	jwt "github.com/golang-jwt/jwt/v4"
 	"github.com/gorilla/websocket"
 
 	"github.com/chenjiandongx/ginprom"
@@ -41,6 +41,10 @@ import (
 	ginSwagger "github.com/swaggo/gin-swagger"
 	"github.com/swaggo/gin-swagger/swaggerFiles"
 )
+
+func main() {
+	JwtTest()
+}
 
 func AesTest() {
 	appKey := "1234567890123456"
@@ -75,7 +79,7 @@ func ExceptionMiddlewareTest() {
 		SystemEmailUser: "tmmp@qq.cn",
 		SystemEmailPass: "123456",
 		ErrorNotifyUser: "tmmp@qq.cn",
-		IsLog:           true,
+		IsDbLog:         true,
 	}
 	exception.Init(&exceptionSetting)
 	r := gin.New()
@@ -227,7 +231,7 @@ func JwtTest() {
 	token, _ := jwttool.GenerateToken(userinfo)
 	fmt.Println(token)
 	// 解析token
-	claimsJson, _ := jwttool.Parse("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IndhbmdjaGVuZyIsImd1aWQiOiJjMTc2ZmUzOC1jYWQ5LTQ1NDAtODJhZC0yYzg4NWQ2YjNhYzMiLCJhdmF0YXIiOiIiLCJkaXNwbGF5TmFtZSI6IueOi-aIkCIsImxvZ2luTmFtZSI6IndhbmdjaGVuZyIsImVtYWlsQWRkcmVzcyI6IiIsInVzZXJUeXBlIjoiMCIsIlRpbWUiOiIyMDIwMDUwOTExMzczMSIsIm5iZiI6MTU4ODk5NTQ1MSwiZXhwIjoxNjIwNTMxNDUxLCJpYXQiOjE1ODg5OTU0NTEsImlzcyI6Imluc3BpcnkiLCJhdWQiOiJpbnNwaXJ5In0.xsxkBsVHrIr5uIg2NMZu2vsTHjZ-4fwAB3YXFdURbC0")
+	claimsJson, _ := jwttool.Parse("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6InVzZXJuYW1lIiwiZ3VpZCI6IjEyMzQ1NiIsImF2YXRhciI6IkF2YXRhciIsImRpc3BsYXlOYW1lIjoi546L5oiQIiwibG9naW5OYW1lIjoid2FuZ2NoZW5nIiwiZW1haWxBZGRyZXNzIjoid2FuZ2NoZW5nQGluc3BpcnkuY24iLCJ1c2VyVHlwZSI6IjAiLCJ0aW1lIjoiMjAyMDA1MDcxNTIzMTMiLCJhdWQiOiJpbnNwaXJ5IiwiZXhwIjoxNjYwMDQyNjAwLCJpc3MiOiJpbnNwaXJ5In0.w13ZFs1kchDjZz7vl6n2CL-lzbpLhlySsrRtXVdI5h8")
 	fmt.Println(claimsJson)
 	// json转化
 	b := []byte(claimsJson)
@@ -340,8 +344,4 @@ func loghelpTest() {
 	})
 	loghelp.Log("logtest", "stacktrace", false)
 	loghelp.Error("logtest", "stacktrace", true)
-}
-
-func main() {
-	loghelpTest()
 }
