@@ -19,10 +19,9 @@ require (
 	github.com/satori/go.uuid v1.2.0 // indirect
 	github.com/shima-park/agollo v1.2.7
 	github.com/streadway/amqp v0.0.0-20190827072141-edfb9018d271
-	github.com/swaggo/gin-swagger v1.6.0
+	github.com/swaggo/gin-swagger v1.4.3
 	github.com/xinliangnote/go-util v0.0.0-20200323134426-527984dc34bf
 	gopkg.in/alexcesaro/quotedprintable.v3 v3.0.0-20150716171945-2caba252f4dc // indirect
-	gopkg.in/go-playground/validator.v8 v8.18.2 // indirect
 	gopkg.in/gomail.v2 v2.0.0-20160411212932-81ebce5c23df // indirect
 	gopkg.in/ory-am/dockertest.v3 v3.8.1 // indirect
 	moul.io/http2curl v1.0.0 // indirect
