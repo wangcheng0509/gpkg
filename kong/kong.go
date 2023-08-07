@@ -50,6 +50,13 @@ func InitKong(kongSetting Kong) {
 		Target: kongSetting.TargetPath + ":" + kongSetting.TargetPort,
 		Weight: kongSetting.TargetWeight,
 	}
+	targets, _ := client.Targets().GetTargetsFromUpstreamId(updatedUpstream.Id)
+	for _, target := range targets {
+		if *target.Target == targetRequest.Target {
+			_ = client.Targets().DeleteFromUpstreamById(updatedUpstream.Id, *target.Id)
+			break
+		}
+	}
 	createdTarget, err := client.Targets().CreateFromUpstreamId(updatedUpstream.Id, targetRequest)
 	if err != nil {
 		panic(err)
