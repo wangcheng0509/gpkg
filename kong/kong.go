@@ -43,6 +43,13 @@ func InitKong(kongSetting Kong) {
 		Target: kongSetting.TargetPath + ":" + kongSetting.TargetPort,
 		Weight: 100,
 	}
+	targets, _ := client.Targets().GetTargetsFromUpstreamId(updatedUpstream.Id)
+	for _, target := range targets {
+		if *target.Target == targetRequest.Target {
+			_ = client.Targets().DeleteFromUpstreamById(updatedUpstream.Id, *target.Id)
+			break
+		}
+	}
 	createdTarget, _ := client.Targets().CreateFromUpstreamId(updatedUpstream.Id, targetRequest)
 	fmt.Printf("Target: %+v", createdTarget)
 	fmt.Println("")
