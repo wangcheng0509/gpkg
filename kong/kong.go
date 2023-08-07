@@ -51,6 +51,7 @@ func InitKong(kongSetting Kong) {
 		Weight: kongSetting.TargetWeight,
 	}
 	targets, _ := client.Targets().GetTargetsFromUpstreamId(updatedUpstream.Id)
+	fmt.Printf("targets:%+v\n", targets)
 	for _, target := range targets {
 		if *target.Target == targetRequest.Target {
 			_ = client.Targets().DeleteFromUpstreamById(updatedUpstream.Id, *target.Id)
