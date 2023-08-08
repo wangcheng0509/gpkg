@@ -29,7 +29,7 @@ type ErrOption struct {
 	IsDing          bool
 	Webhook         string `json:"webhook"` // Webhook 钉钉Webhook
 	Secret          string `json:"secret"`  // Secret 钉钉密钥
-	IsDbLog         bool
+	IsLog           bool
 }
 
 var errSetting = &ErrOption{}
@@ -110,7 +110,7 @@ func sendNotice(c *gin.Context, err interface{}, reqJSON []byte) {
 		SendDingdingNotice(errSetting.AppName, subject, fmt.Sprintf("%s", err))
 	}
 
-	if errSetting.IsDbLog {
+	if errSetting.IsLog {
 		msg := fmt.Sprintf(`Application:%s,
 		ClassName:%s,
 		Message:%s,
