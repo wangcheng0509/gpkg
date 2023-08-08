@@ -79,7 +79,7 @@ func ExceptionMiddlewareTest() {
 		SystemEmailUser: "tmmp@qq.cn",
 		SystemEmailPass: "123456",
 		ErrorNotifyUser: "tmmp@qq.cn",
-		IsDbLog:         true,
+		IsLog:           true,
 	}
 	exception.Init(&exceptionSetting)
 	r := gin.New()
