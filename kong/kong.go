@@ -86,7 +86,7 @@ func InitKong(kongSetting Kong) {
 		Protocols:    gokong.StringSlice(kongSetting.RouteProtocol),
 		Methods:      gokong.StringSlice([]string{"POST", "GET", "PUT", "DELETE", "OPTIONS", "HEAD", "TRACE", "CONNECT"}),
 		Hosts:        gokong.StringSlice(kongSetting.RouteHost),
-		Paths:        gokong.StringSlice([]string{fmt.Sprintf("/%s/(?i)", kongSetting.RoutePath)}),
+		Paths:        gokong.StringSlice([]string{fmt.Sprintf("/%s/", kongSetting.RoutePath)}),
 		StripPath:    gokong.Bool(false),
 		PreserveHost: gokong.Bool(false),
 		Service:      gokong.ToId(*updatedService.Id),
